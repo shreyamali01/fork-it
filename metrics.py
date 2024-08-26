@@ -1,5 +1,6 @@
 from typing import Union
 import pandas as pd
+import numpy as np
 
 
 def accuracy(y_hat: pd.Series, y: pd.Series) -> float:
@@ -14,33 +15,81 @@ def accuracy(y_hat: pd.Series, y: pd.Series) -> float:
     """
     assert y_hat.size == y.size
     # TODO: Write here
-    pass
+
+    data_size = y.size #size of the dataset
+
+    if data_size == 0:
+        raise ValueError("Dataset is empty, accuracy cannot be calculated!")
+    
+    correct_predictions = (y_hat==y).sum()
+    
+    accuracy_val = correct_predictions / data_size
+
+    return accuracy_val
 
 
 def precision(y_hat: pd.Series, y: pd.Series, cls: Union[int, str]) -> float:
     """
     Function to calculate the precision
     """
-    pass
+    assert y_hat.size == y.size
+
+    #getting true positive and false positive instances
+    true_positives = ((y_hat == cls) & (y == cls)).sum()
+    false_positives = ((y_hat == cls) & (y != cls)).sum()
+
+    total_positives = true_positives + false_positives
+
+    #no predicted positives
+    if total_positives == 0:
+        return 0
+
+    precision_val = true_positives/total_positives
+
+    return precision_val
 
 
 def recall(y_hat: pd.Series, y: pd.Series, cls: Union[int, str]) -> float:
     """
     Function to calculate the recall
     """
-    pass
+    assert y_hat.size == y.size
+
+    true_positives = ((y_hat == cls) & (y == cls)).sum()
+    false_negatives = ((y_hat != cls) & (y == cls)).sum()
+
+    total_actual_positives = true_positives + false_negatives
+
+    if total_actual_positives == 0:
+        raise ValueError("no actual instances of class in the dataset")
+
+    recall_val = true_positives / total_actual_positives
+
+    return recall_val
 
 
 def rmse(y_hat: pd.Series, y: pd.Series) -> float:
     """
     Function to calculate the root-mean-squared-error(rmse)
     """
+    assert y_hat.size == y.size
+    data_size = y.size 
 
-    pass
+    if data_size == 0:
+        raise ValueError("Data set is empty, RMSE cannot be calculated")
+
+    mse_val = np.mean((y_hat - y) ** 2)
+    rmse_val = np.sqrt(mse_val)
+
+    return rmse_val
 
 
 def mae(y_hat: pd.Series, y: pd.Series) -> float:
     """
     Function to calculate the mean-absolute-error(mae)
     """
-    pass
+    assert y_hat.size == y.size
+    absolute_errors = (y_hat - y).abs()
+    mae_val = absolute_errors.mean()
+
+    return mae_val
