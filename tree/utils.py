@@ -92,15 +92,15 @@ def information_gain(Y: pd.Series, attr: pd.Series, criterion: str) -> float:
         subset_Y = Y[attr == value]
     
     #calculating entropy based on criterion
-    if criterion == 'entropy':
-        subset_impurity = entropy(subset_Y)
-    elif criterion == 'gini':
-        subset_impurity = gini_index(subset_Y)
-    elif criterion == 'mse':
-        subset_impurity = mse(subset_Y)
+        if criterion == 'entropy':
+            subset_impurity = entropy(subset_Y)
+        elif criterion == 'gini':
+            subset_impurity = gini_index(subset_Y)
+        elif criterion == 'mse':
+            subset_impurity = mse(subset_Y)
 
-    weight = len(subset_Y) / len(Y)
-    weighted_impurity += weight * subset_impurity
+        weight = len(subset_Y) / len(Y)
+        weighted_impurity += weight * subset_impurity
 
     info_gain = initial_impurity - weighted_impurity
 
@@ -119,7 +119,7 @@ def opt_split_attribute(X: pd.DataFrame, y: pd.Series, criterion, features: pd.S
     """
 
     best_attr = None
-    best_i_gain = -float('inf')
+    best_info_gain = -float('inf')
     initial_impurity = None
 
     #finding initial impurity based on criterion
