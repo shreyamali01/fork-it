@@ -92,15 +92,15 @@ def information_gain(Y: pd.Series, attr: pd.Series, criterion: str) -> float:
         subset_Y = Y[attr == value]
     
     #calculating entropy based on criterion
-    if criterion == 'entropy':
-        subset_impurity = entropy(subset_Y)
-    elif criterion == 'gini':
-        subset_impurity = gini_index(subset_Y)
-    elif criterion == 'mse':
-        subset_impurity = mse(subset_Y)
+        if criterion == 'entropy':
+            subset_impurity = entropy(subset_Y)
+        elif criterion == 'gini':
+            subset_impurity = gini_index(subset_Y)
+        elif criterion == 'mse':
+            subset_impurity = mse(subset_Y)
 
-    weight = len(subset_Y) / len(Y)
-    weighted_impurity += weight * subset_impurity
+        weight = len(subset_Y) / len(Y)
+        weighted_impurity += weight * subset_impurity
 
     info_gain = initial_impurity - weighted_impurity
 
@@ -118,10 +118,30 @@ def opt_split_attribute(X: pd.DataFrame, y: pd.Series, criterion, features: pd.S
     return: attribute to split upon
     """
 
+    best_attr = None
+    best_info_gain = -float('inf')
+    initial_impurity = None
+
+    #finding initial impurity based on criterion
+    if criterion == 'entropy':
+        initial_impurity = entropy(y)
+    elif criterion == 'gini':
+        initial_impurity = gini_index(y)
+    elif criterion == 'mse':
+        initial_impurity = mse(y)
+    
+    for attr in features:
+        #calculating information gain for each attribute
+        info_gain = information_gain(y, X[attr], criterion)
+        
+        #updating the best attribute if this one is better
+        if info_gain > best_info_gain:
+            best_info_gain = info_gain
+            best_attr = attr
+
+    return best_attr
+
     # According to wheather the features are real or discrete valued and the criterion, find the attribute from the features series with the maximum information gain (entropy or varinace based on the type of output) or minimum gini index (discrete output).
-
-    pass
-
 
 def split_data(X: pd.DataFrame, y: pd.Series, attribute, value):
     """
@@ -135,6 +155,19 @@ def split_data(X: pd.DataFrame, y: pd.Series, attribute, value):
     return: splitted data(Input and output)
     """
 
-    # Split the data based on a particular value of a particular attribute. You may use masking as a tool to split the data.
+    # If the attribute is real-valued, split based on a threshold
+    if np.issubdtype(X[attribute].dtype, np.number):
+        left_mask = X[attribute] <= value
+        right_mask = X[attribute] > value
+    else:
+        # For categorical features, split based on the exact match
+        left_mask = X[attribute] == value
+        right_mask = X[attribute] != value
+    
+    # Split the data into two subsets
+    X_left, y_left = X[left_mask], y[left_mask]
+    X_right, y_right = X[right_mask], y[right_mask]
+    
+    return (X_left, y_left), (X_right, y_right)
 
-    pass
+    # Split the data based on a particular value of a particular attribute. You may use masking as a tool to split the data.
