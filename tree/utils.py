@@ -4,20 +4,22 @@ There is no restriction on following the below template, these fucntions are her
 """
 
 import pandas as pd
+import numpy as np
+
 
 def one_hot_encoding(X: pd.DataFrame) -> pd.DataFrame:
     """
     Function to perform one hot encoding on the input data
     """
 
-    pass
+    return pd.get_dummies(X,drop_first=True)
 
 def check_ifreal(y: pd.Series) -> bool:
     """
     Function to check if the given series has real or discrete values
     """
 
-    pass
+    return np.issubdtype(y.dtype,np.number)
 
 
 def entropy(Y: pd.Series) -> float:
@@ -25,7 +27,16 @@ def entropy(Y: pd.Series) -> float:
     Function to calculate the entropy
     """
 
-    pass
+    #counting occurences of the classes
+    value, counts = np.unique(Y, return_counts=True)
+
+    #calculating probalities for each class
+    prob_arr = counts/ len(Y)
+
+    #calculating entropy
+    entropy_val = -np.sum(prob_arr*np.log2(prob_arr + 1e-9))
+
+    return entropy_val
 
 
 def gini_index(Y: pd.Series) -> float:
@@ -33,7 +44,28 @@ def gini_index(Y: pd.Series) -> float:
     Function to calculate the gini index
     """
 
-    pass
+    #counting occurences of the classes 
+    value, counts = np.unique(Y, return_counts=True)
+
+    #calculating probalities for each class
+    prob_arr = counts/ len(Y)
+
+    #calculating gini index
+    gini_val = 1 - np.sum(prob_arr**2)
+
+    return gini_val
+
+def mse(Y:pd.Series) -> float:
+    """"
+    Function to calculate mean square error (MSE)
+
+    """
+
+    mean_Y = np.mean(Y)
+
+    mse_val = np.mean((Y-mean_Y)**2)
+
+    return mse_val
 
 
 def information_gain(Y: pd.Series, attr: pd.Series, criterion: str) -> float:
@@ -41,7 +73,38 @@ def information_gain(Y: pd.Series, attr: pd.Series, criterion: str) -> float:
     Function to calculate the information gain using criterion (entropy, gini index or MSE)
     """
 
-    pass
+    #calculating initial impurity of the target
+
+    if criterion == 'entropy':
+        initial_impurity = entropy(Y)
+    elif criterion == 'gini':
+        initial_impurity = gini_index(Y)
+    elif criterion == 'mse':
+        initial_impurity = mse(Y)
+
+    else:
+        raise ValueError('Criterion must be either entropy, gini or mse')
+    
+    unique_values = attr.unique()
+    weighted_impurity = 0
+
+    for value in unique_values:
+        subset_Y = Y[attr == value]
+    
+    #calculating entropy based on criterion
+    if criterion == 'entropy':
+        subset_impurity = entropy(subset_Y)
+    elif criterion == 'gini':
+        subset_impurity = gini_index(subset_Y)
+    elif criterion == 'mse':
+        subset_impurity = mse(subset_Y)
+
+    weight = len(subset_Y) / len(Y)
+    weighted_impurity += weight * subset_impurity
+
+    info_gain = initial_impurity - weighted_impurity
+
+    return info_gain
 
 
 def opt_split_attribute(X: pd.DataFrame, y: pd.Series, criterion, features: pd.Series):
