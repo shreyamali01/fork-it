@@ -19,92 +19,169 @@ def check_ifreal(y: pd.Series) -> bool:
     Function to check if the given series has real or discrete values
     """
 
-    return np.issubdtype(y.dtype,np.number)
+    return y.dtype.name == "float64"
 
 
 def entropy(Y: pd.Series) -> float:
     """
     Function to calculate the entropy
     """
-
-    #counting occurences of the classes
     value, counts = np.unique(Y, return_counts=True)
-
-    #calculating probalities for each class
-    prob_arr = counts/ len(Y)
-
-    #calculating entropy
-    entropy_val = -np.sum(prob_arr*np.log2(prob_arr + 1e-9))
-
-    return entropy_val
+    total = counts.sum() 
+    probabilities = counts / total
+    entropy = 0
+    for pi in probabilities:
+        entropy -= pi * np.log2(pi)
+    return entropy
 
 
 def gini_index(Y: pd.Series) -> float:
     """
     Function to calculate the gini index
     """
+    values, counts = np.unique(Y, return_counts = True)
+    total = counts.sum()
+    probabilities = counts / total
 
-    #counting occurences of the classes 
-    value, counts = np.unique(Y, return_counts=True)
+    gini_index = 1
+    sum_of_squares = np.sum(np.square(probabilities))
+    gini_index -= sum_of_squares
+    return gini_index
 
-    #calculating probalities for each class
-    prob_arr = counts/ len(Y)
+def information_gain(Y, attr, criterion=None):
+    # REAL INPUT REAL OUTPUT
+    if (check_ifreal(Y) and check_ifreal(attr)):
+        # Create a table with 'attribute' and 'output' columns
+        table = pd.concat([attr, Y], axis=1).reindex(attr.index)
+        table.columns = ['attribute', 'output']
+        table.sort_values(by='attribute', inplace=True)
+        input_values = table['attribute'].to_numpy()
+        output_values = table['output'].to_numpy()
 
-    #calculating gini index
-    gini_val = 1 - np.sum(prob_arr**2)
+        optimum_split = 0
+        max_gain = -np.inf
+        parent_var = np.var(Y)
 
-    return gini_val
+        # Iterate over potential split points to find the one with maximum gain
+        for i in range(1, len(input_values)):
+            curr_split = float(input_values[i] + input_values[i - 1]) / 2
+            left_split = table[table['attribute'] <= curr_split]['output']
+            right_split = table[table['attribute'] > curr_split]['output']
 
-def mse(Y:pd.Series) -> float:
-    """"
-    Function to calculate mean square error (MSE)
+            child_var = 0
+            child_var += (left_split.size / output_values.size) * (np.var(left_split))
+            child_var += (right_split.size / output_values.size) * (np.var(right_split))
+            split_var = parent_var - child_var
 
-    """
+            if (split_var > max_gain):
+                max_gain = split_var
+                optimum_split = curr_split
 
-    mean_Y = np.mean(Y)
+        return max_gain, optimum_split
 
-    mse_val = np.mean((Y-mean_Y)**2)
+    # REAL INPUT DISCRETE OUTPUT USING INFORMATION GAIN
+    elif (check_ifreal(attr) and (not check_ifreal(Y)) and criterion == "information_gain"):
+        # Create a table with 'attribute' and 'output' columns
+        table = pd.concat([attr, Y], axis=1).reindex(attr.index)
+        table.columns = ['attribute', 'output']
+        table.sort_values(by='attribute', inplace=True)
+        input_values = table['attribute'].to_numpy()
+        output_values = table['output'].to_numpy()
 
-    return mse_val
+        optimum_split = 0
+        max_gain = -np.inf
+        parent_entropy = entropy(Y)
 
+        # Iterate over potential split points to find the one with maximum gain
+        for i in range(1, len(input_values)):
+            curr_split = float(input_values[i] + input_values[i - 1]) / 2
+            left_split = table[table['attribute'] <= curr_split]['output'].to_numpy()
+            right_split = table[table['attribute'] > curr_split]['output'].to_numpy()
+            child_entropy = 0
+            child_entropy += (left_split.size / output_values.size) * (entropy(left_split))
+            child_entropy += (right_split.size / output_values.size) * (entropy(right_split))
+            split_entropy = parent_entropy - child_entropy
 
-def information_gain(Y: pd.Series, attr: pd.Series, criterion: str) -> float:
-    """
-    Function to calculate the information gain using criterion (entropy, gini index or MSE)
-    """
+            if (split_entropy > max_gain):
+                max_gain = split_entropy
+                optimum_split = curr_split
 
-    #calculating initial impurity of the target
+        return max_gain, optimum_split
 
-    if criterion == 'entropy':
-        initial_impurity = entropy(Y)
-    elif criterion == 'gini':
-        initial_impurity = gini_index(Y)
-    elif criterion == 'mse':
-        initial_impurity = mse(Y)
+    # REAL INPUT DISCRETE OUTPUT USING GINI INDEX
+    elif (check_ifreal(attr) and (not check_ifreal(Y)) and criterion == "gini_index"):
+        # Create a table with 'attribute' and 'output' columns
+        table = pd.concat([attr, Y], axis=1).reindex(attr.index)
+        table.columns = ['attribute', 'output']
+        table.sort_values(by='attribute', inplace=True)
+        input_values = table['attribute'].to_numpy()
+        output_values = table['output'].to_numpy()
 
-    else:
-        raise ValueError('Criterion must be either entropy, gini or mse')
-    
-    unique_values = attr.unique()
-    weighted_impurity = 0
+        optimum_split = 0
+        max_gain = -np.inf
+        parent_gini = gini_index(Y)
 
-    for value in unique_values:
-        subset_Y = Y[attr == value]
-    
-    #calculating entropy based on criterion
-        if criterion == 'entropy':
-            subset_impurity = entropy(subset_Y)
-        elif criterion == 'gini':
-            subset_impurity = gini_index(subset_Y)
-        elif criterion == 'mse':
-            subset_impurity = mse(subset_Y)
+        # Iterate over potential split points to find the one with maximum gain
+        for i in range(1, len(input_values)):
+            curr_split = float(input_values[i] + input_values[i - 1]) / 2
+            left_split = table[table['attribute'] <= curr_split]['output'].to_numpy()
+            right_split = table[table['attribute'] > curr_split]['output'].to_numpy()
+            child_gini = 0
+            child_gini += (left_split.size / output_values.size) * (gini_index(left_split))
+            child_gini += (right_split.size / output_values.size) * (gini_index(right_split))
+            split_gini = parent_gini - child_gini
 
-        weight = len(subset_Y) / len(Y)
-        weighted_impurity += weight * subset_impurity
+            if (split_gini > max_gain):
+                max_gain = split_gini
+                optimum_split = curr_split
 
-    info_gain = initial_impurity - weighted_impurity
+        return max_gain, optimum_split
 
-    return info_gain
+    # DISCRETE INPUT DISCRETE OUTPUT USING INFORMATION GAIN
+    elif ((not check_ifreal(attr)) and (not check_ifreal(Y)) and criterion == "information_gain"):
+        parent_entropy = entropy(Y)
+        total_size = Y.size
+        classes = np.unique(attr)
+        child_entropy = 0
+
+        # Calculate child entropy for each class
+        for i in classes:
+            curr_class = Y[attr == i]
+            class_entropy = entropy(curr_class)
+            child_entropy += (curr_class.size / total_size) * class_entropy
+
+        return parent_entropy - child_entropy, None
+
+    # DISCRETE INPUT DISCRETE OUTPUT USING GINI INDEX
+    elif ((not check_ifreal(attr)) and (not check_ifreal(Y)) and criterion == "gini_index"):
+        parent_gini = gini_index(Y)
+        total_size = Y.size
+        classes = np.unique(attr)
+        child_gini = 0
+
+        # Calculate child gini index for each class
+        for i in classes:
+            curr_class = Y[attr == i]
+            class_gini = gini_index(curr_class)
+            child_gini += (curr_class.size / total_size) * class_gini
+
+        return parent_gini - child_gini, None
+
+    # DISCRETE INPUT REAL OUTPUT
+    elif ((not check_ifreal(attr)) and check_ifreal(Y)):
+        parent_var = np.var(Y)
+        total_size = Y.size
+        classes = np.unique(attr)
+        child_var = 0
+
+        # Calculate child variance for each class
+        for i in classes:
+            curr_class = Y[attr == i]
+            class_variance = np.var(curr_class)
+            child_var += curr_class.size / Y.size * class_variance
+
+        return parent_var - child_var, None
+
 
 
 def opt_split_attribute(X: pd.DataFrame, y: pd.Series, criterion, features: pd.Series):
@@ -118,30 +195,49 @@ def opt_split_attribute(X: pd.DataFrame, y: pd.Series, criterion, features: pd.S
     return: attribute to split upon
     """
 
-    best_attr = None
-    best_info_gain = -float('inf')
-    initial_impurity = None
+    # Initialize variables to track maximum information gain and the corresponding attribute
+    max_info_gain = -np.inf
+    opt_attribute = None
 
-    #finding initial impurity based on criterion
-    if criterion == 'entropy':
-        initial_impurity = entropy(y)
-    elif criterion == 'gini':
-        initial_impurity = gini_index(y)
-    elif criterion == 'mse':
-        initial_impurity = mse(y)
-    
-    for attr in features:
-        #calculating information gain for each attribute
-        info_gain = information_gain(y, X[attr], criterion)
+    # Iterate through each attribute to find the one with the maximum information gain
+    for attribute in features:
+        # Calculate information gain for the current attribute
+        curr_info_gain, _ = information_gain(y, X[attribute], criterion)
         
-        #updating the best attribute if this one is better
-        if info_gain > best_info_gain:
-            best_info_gain = info_gain
-            best_attr = attr
+        # Update max_info_gain and opt_attribute if the current attribute has higher information gain
+        if curr_info_gain > max_info_gain:
+            max_info_gain = curr_info_gain
+            opt_attribute = attribute
 
-    return best_attr
+    return opt_attribute
 
     # According to wheather the features are real or discrete valued and the criterion, find the attribute from the features series with the maximum information gain (entropy or varinace based on the type of output) or minimum gini index (discrete output).
+
+def opt_split_attribute(X: pd.DataFrame, y: pd.Series, criterion: str, features: pd.Series):
+    """
+    Function to find the optimal attribute to split about.
+    If needed you can split this function into 2, one for discrete and one for real-valued features.
+    You can also change the parameters of this function according to your implementation.
+
+    features: pd.Series is a list of all the attributes we have to split upon
+
+    return: attribute to split upon
+    """
+    # Initialize variables to track maximum information gain and the corresponding attribute
+    max_info_gain = -np.inf
+    opt_attribute = None
+
+    # Iterate through each attribute to find the one with the maximum information gain
+    for attribute in features:
+        # Calculate information gain for the current attribute
+        curr_info_gain, _ = information_gain(y, X[attribute], criterion)
+        
+        # Update max_info_gain and opt_attribute if the current attribute has higher information gain
+        if curr_info_gain > max_info_gain:
+            max_info_gain = curr_info_gain
+            opt_attribute = attribute
+
+    return opt_attribute
 
 def split_data(X: pd.DataFrame, y: pd.Series, attribute, value):
     """
@@ -155,19 +251,18 @@ def split_data(X: pd.DataFrame, y: pd.Series, attribute, value):
     return: splitted data(Input and output)
     """
 
-    # If the attribute is real-valued, split based on a threshold
-    if np.issubdtype(X[attribute].dtype, np.number):
-        left_mask = X[attribute] <= value
-        right_mask = X[attribute] > value
+    # Check if the attribute is real-valued or discrete
+    if check_ifreal(X[attribute]):
+        # For real-valued attributes, split the data based on the specified value
+        left_split = X[X[attribute] <= value]
+        right_split = X[X[attribute] > value]
     else:
-        # For categorical features, split based on the exact match
-        left_mask = X[attribute] == value
-        right_mask = X[attribute] != value
-    
-    # Split the data into two subsets
-    X_left, y_left = X[left_mask], y[left_mask]
-    X_right, y_right = X[right_mask], y[right_mask]
-    
-    return (X_left, y_left), (X_right, y_right)
+        # For discrete attributes, split the data based on equality with the specified value
+        left_split = X[X[attribute] == value]
+        right_split = X[X[attribute] != value]
 
-    # Split the data based on a particular value of a particular attribute. You may use masking as a tool to split the data.
+    # Get corresponding output values for the left and right splits
+    left_output = y[left_split.index]
+    right_output = y[right_split.index]
+
+    return (left_split, left_output), (right_split, right_output)
