@@ -7,6 +7,7 @@
 1. Use of Sklearn Library to train Decision Trees
 
     * Results for decision tree model trained using the raw accelerometer data are as follows - 
+        '''
         Accuracy: 0.61
         Precision: 0.60
         Recall: 0.61
@@ -47,7 +48,10 @@
 
         Thus, it can be observed that even after implementing oversampling and undersampling signficant changes in the result are not observed. Yet, undersampling provides slightly better results as compared to oversampling. 
 
+        '''
+
     * Results for decision tree model trained using the features obtained by TSFEL are as follows - 
+        '''
         Accuracy: 0.89
         Precision: 0.90
         Recall: 0.89
@@ -60,8 +64,10 @@
             [0 0 0 0 0 9]]
             
         Oversampling and undersampling yielded same results for the decision tree model trained by this data. 
+        '''
         
     * Results for decision tree model trained using the features obtained by TSFEL are as follows - 
+        '''
         Accuracy: 0.89
         Precision: 0.90
         Recall: 0.89
@@ -74,8 +80,10 @@
             [0 0 0 0 0 9]]
             
         Oversampling and undersampling yielded same results for the decision tree model trained by this data.
+        '''
         
     * Results for decision tree model trained using the features provided in the dataset are as follows - 
+        '''
             Accuracy: 0.84
             Precision: 0.84
             Recall: 0.84
@@ -88,6 +96,17 @@
                 [  0   0   0  51  35 385]]
         
         Oversampling and undersampling yielded same results for the decision tree model trained by this data.
+        '''
+    
+    * Comparision between the 3 models
+
+        '''
+
+        The model trained on Raw Accelerometer Data shows poor performance when it comes to all the metrics as compared to the other two models. Whereas, the model trained on the features given in the dataset shows better performance as compared to the former model. However, the model trained on the TSFEL features shows best performance with an accuracy of 89% and precision of 90%. From the confusion matrix we can observe that it works well for most of the classes. The reason for better performance as compared to the previous models is because TSFEL extracts relevant features that make it easier for the model to distinguish between the classes/activities.
+
+        '''
+
+2.  
 
         
         
