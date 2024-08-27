@@ -2,11 +2,48 @@
 
 ## Task 1 : Exploratory Data Analysis (EDA)
 
+1. **Plot of One Sample Data from Each Class**
+
+    ![Plot of One Sample Data from Each Class](Task_1/T1Plot1.png)
+
+    It can be infered from the graphs that the amplitudes of acceleration of static activities (Laying, Standing, Sitting) is much smaller than that of the dynamic activities (Walking, Walking Upstairs, Walking Downstairs).
+
+    The model can well differentiate / classify activities as static and dynamic only. But because of less complexity of the model, it can't differentiate the 6 activities much accurately. Since the data is time-sensored data, use of Neural Network Algorithms will be able to classify each activity.
+
+2. **Density Plot of Linear Acceleration for Different Activities**
+
+    ![Plot](Task_1/T1Question2.png)
+
+    ### STATIC ACTIVITIES
+      * The narrow acceleration range classifies static activities like laying, standing and sitting, as the waveform also   shows a near flatline for such activities. The concentrated density signifies minimal variation in acceleration, reflecting the relatively stationary nature of these activities.
+    
+    ### DYNAMIC ACTIVITIES
+      * The broad acceleration range classifies dynamic activities like walking, walking downstairs and walking upstairs, as the waveform also shows a high change in acceleration for such activities. The reduced prominence of density peaks implies a greater variability in acceleration values, which is indicative of movement and changes in activity.
+    
+    Based on the linear acceleration properties of the activities, this plot helps in the distinction between static and dynamic activities. It is feasible to determine whether an activity is largely stationary or involves movement by examining the density peaks and the acceleration value distribution. With the help of this data, models that can categorize activities according to their patterns of acceleration will be developed, which would benefit applications like activity recognition and health monitoring.
+
+3. **Visualizing the data using PCA**
+
+      * Scatter Plot to visualize different classes of activities (PCA on Total Acceleration)
+
+        ![Plot](Task_1/T1Q3.png)
+
+      * Scatter Plot to visualize different classes of activities (PCA on features created by using TSFEL)
+
+        ![Plot](Task_1/T1Q3b.png)
+      
+      * Scatter Plot to visualize different classes of activities (PCA on features in the provided dataset)
+
+        ![Plot](Task_1/T1Q3c.png)
+
+
 ## Task 2 : Decision Trees for Human Activity Recognition
 
 1. **Use of Sklearn Library to Train Decision Trees**
 
     * **Results for decision tree model trained using the raw accelerometer data:**
+
+      The code for training a decision tree model using the raw accelerometer data - ['sec1.ipynb'](Task_2/sec1.ipynb)
     
         - Accuracy: 0.61
         - Precision: 0.60
@@ -61,6 +98,8 @@
         Thus, it can be observed that even after implementing oversampling and undersampling, significant changes in the result are not observed. Yet, undersampling provides slightly better results compared to oversampling.
 
     * **Results for decision tree model trained using the features obtained by TSFEL:**
+
+      The code for training a decision tree model using the features obtained by TSFEL - ['sec2.ipynb'](Task_2/sec2.ipynb)
     
         - Accuracy: 0.89
         - Precision: 0.90
@@ -79,6 +118,8 @@
         Oversampling and undersampling yielded the same results for the decision tree model trained with this data.
     
     * **Results for decision tree model trained using the features provided in the dataset:**
+
+      The code for training a decision tree model using the features provided in the database - ['sec3.ipynb'](Task_2/sec3.ipynb)
     
         - Accuracy: 0.84
         - Precision: 0.84
@@ -118,10 +159,10 @@
 
 3. **Bad Activities and Participants**
 
-  Upon analyzing the confusion matrices for model 1, model 2 and model 3, we notice that all the models fit perfectly for class 1, and model 3 fits perfectly for class 1, class 5 and class 6. Furthermore, it can be also observed that Model 1 has the most
-  misclassifications followed by model 3 and model 2 respectively. The reason for this miscalculations is class imbalance. We tried to resolve the class imbalance by trying to oversample the minority classes and undersample the majority classes, however it did not make much difference to the accuracy values, precision values and confusion matrices. 
+    Upon analyzing the confusion matrices for model 1, model 2 and model 3, we notice that all the models fit perfectly for class 1, and model 3 fits perfectly for class 1, class 5 and class 6. Furthermore, it can be also observed that Model 1 has the most
+    misclassifications followed by model 3 and model 2 respectively. The reason for this miscalculations is class imbalance. We tried to resolve the class imbalance by trying to oversample the minority classes and undersample the majority classes, however it did not make much difference to the accuracy values, precision values and confusion matrices. 
 
-  We can also determine the best and worst performing activities/classes by F1 score measure. 
+    We can also determine the best and worst performing activities/classes by F1 score measure. 
 
 
 
