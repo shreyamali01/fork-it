@@ -101,9 +101,19 @@
         The model trained on raw accelerometer data shows poor performance across all metrics compared to the other two models. The model trained on the features provided in the dataset shows better performance than the raw data model. However, the model trained on the TSFEL features shows the best performance with an accuracy of 89% and precision of 90%. From the confusion matrix, we observe that it works well for most of the classes. The reason for better performance is that TSFEL extracts relevant features, making it easier for the model to distinguish between the classes/activities.
 
 2. **Train Decision Trees with Varying Depths (2-8) Using All the Above 3 Methods**
+    
+    ### Plot of accuracy vs depth of the trees for the models
 
-    - Train Decision Trees with depths ranging from 2 to 8 for the raw accelerometer data, TSFEL features, and provided features.
-    - Plot the accuracy of the model on test data versus the depth of the tree.
+    - Model trained on Raw Accelerometer Data 
+    ![Accuracy vs. Depth](/Users/shreya/Documents/fork-it/Task_2/accuracy_vs_depth_model1.png)
+
+    - Model trained using features extracted from TSFEL
+    ![Accuracy vs. Depth](/Users/shreya/Documents/fork-it/Task_2/accuracy_vs_depth_model2.png)
+
+    - Model trained on features provided in the dataset
+    ![Accuracy vs. Depth](/Users/shreya/Documents/fork-it/Task_2/accuracy_vs_depth_model3.png)
+
+
 
 ## Task 3 : Prompt Engineering for Large Language Models (LLMs)
 
