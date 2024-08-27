@@ -14,17 +14,11 @@ def accuracy(y_hat: pd.Series, y: pd.Series) -> float:
     ensure that the function does not fail in corner cases.
     """
     assert y_hat.size == y.size
-    # TODO: Write here
-
     data_size = y.size #size of the dataset
-
     if data_size == 0:
         raise ValueError("Dataset is empty, accuracy cannot be calculated!")
-    
     correct_predictions = (y_hat==y).sum()
-    
     accuracy_val = correct_predictions / data_size
-
     return accuracy_val
 
 
@@ -33,19 +27,15 @@ def precision(y_hat: pd.Series, y: pd.Series, cls: Union[int, str]) -> float:
     Function to calculate the precision
     """
     assert y_hat.size == y.size
-
+    assert cls in y.unique() # To check if the specified class is present in the unique values of y
     #getting true positive and false positive instances
     true_positives = ((y_hat == cls) & (y == cls)).sum()
     false_positives = ((y_hat == cls) & (y != cls)).sum()
-
     total_positives = true_positives + false_positives
-
     #no predicted positives
     if total_positives == 0:
-        return 0
-
+        return 1
     precision_val = true_positives/total_positives
-
     return precision_val
 
 
@@ -54,7 +44,7 @@ def recall(y_hat: pd.Series, y: pd.Series, cls: Union[int, str]) -> float:
     Function to calculate the recall
     """
     assert y_hat.size == y.size
-
+    assert cls in y.unique()
     true_positives = ((y_hat == cls) & (y == cls)).sum()
     false_negatives = ((y_hat != cls) & (y == cls)).sum()
 
@@ -89,7 +79,6 @@ def mae(y_hat: pd.Series, y: pd.Series) -> float:
     Function to calculate the mean-absolute-error(mae)
     """
     assert y_hat.size == y.size
-    absolute_errors = (y_hat - y).abs()
+    absolute_errors = (abs(y_hat - y)).sum()
     mae_val = absolute_errors.mean()
-
     return mae_val
