@@ -22,7 +22,7 @@
            [   26  1241  2575  9532  1752 15018]]
           ```
 
-        Here, from the confusion matrix, we can observe that the model predicts correctly for class 0. However, it isn't very accurate when it comes to the rest of the classes. To mitigate this inconsistency, we tried oversampling the minority class by applying SMOTE (Synthetic Minority Over-Sampling Technique). This implementation yields the following results:
+        Here, from the confusion matrix, we can observe that the model predicts correctly for class 1. However, it isn't very accurate when it comes to the rest of the classes. To mitigate this inconsistency, we tried oversampling the minority class by applying SMOTE (Synthetic Minority Over-Sampling Technique). This implementation yields the following results:
     
     * **Results after applying SMOTE:**
     
@@ -105,13 +105,23 @@
     ### Plot of accuracy vs depth of the trees for the models
 
     - Model trained on Raw Accelerometer Data 
+
     ![Accuracy vs. Depth](Task_2/accuracy_vs_depth_model1.png)
 
     - Model trained using features extracted from TSFEL
+
     ![Accuracy vs. Depth](Task_2/accuracy_vs_depth_model2.png)
 
     - Model trained on features provided in the dataset
+
     ![Accuracy vs. Depth](/Task_2/accuracy_vs_depth_model3.png)
+
+3. **Bad Activities and Participants**
+
+  Upon analyzing the confusion matrices for model 1, model 2 and model 3, we notice that all the models fit perfectly for class 1, and model 3 fits perfectly for class 1, class 5 and class 6. Furthermore, it can be also observed that Model 1 has the most
+  misclassifications followed by model 3 and model 2 respectively. The reason for this miscalculations is class imbalance. We tried to resolve the class imbalance by trying to oversample the minority classes and undersample the majority classes, however it did not make much difference to the accuracy values, precision values and confusion matrices. 
+
+  We can also determine the best and worst performing activities/classes by F1 score measure. 
 
 
 
