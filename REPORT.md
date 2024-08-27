@@ -105,13 +105,13 @@
     ### Plot of accuracy vs depth of the trees for the models
 
     - Model trained on Raw Accelerometer Data 
-    ![Accuracy vs. Depth](/Users/shreya/Documents/fork-it/Task_2/accuracy_vs_depth_model1.png)
+    ![Accuracy vs. Depth](Task_2/accuracy_vs_depth_model1.png)
 
     - Model trained using features extracted from TSFEL
-    ![Accuracy vs. Depth](/Users/shreya/Documents/fork-it/Task_2/accuracy_vs_depth_model2.png)
+    ![Accuracy vs. Depth](Task_2/accuracy_vs_depth_model2.png)
 
     - Model trained on features provided in the dataset
-    ![Accuracy vs. Depth](/Users/shreya/Documents/fork-it/Task_2/accuracy_vs_depth_model3.png)
+    ![Accuracy vs. Depth](/Task_2/accuracy_vs_depth_model3.png)
 
 
 
