@@ -49,7 +49,7 @@
 
     * **Results for decision tree model trained using the raw accelerometer data:**
 
-      The code for training a decision tree model using the raw accelerometer data - `'sec1.ipynb`
+      The code for training a decision tree model using the raw accelerometer data - `sec1.ipynb`
     
         - Accuracy: 0.61
         - Precision: 0.60
