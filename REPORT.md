@@ -170,4 +170,52 @@
 
 ## Task 4 : Data Collection in the Wild
 
+1. **Result of Decision Tree Model model trained on the raw accelerometer data on our data is as follows**
+
+    Accuracy: 0.24
+    Precision: 0.19
+    Recall: 0.24
+    Confusion Matrix:
+      [[5162    0    0    0    0    0]
+      [5738   13    2    2   77  113]
+      [4705   22    0    0   21   47]
+      [3246  104    3 2270  109  228]
+      [3067  112    1 1602   75  163]
+      [2984  132    2 1847   71  194]]
+    
+    Here we observe that the accuracy is very low and from the confusion matrix we can observe that the data shows high imbalance. The model works well for the class 1 whereas it isn't able to predict other activities efficiently. To improve on the accuracy we can try to preprocess the data.
+
+2. **Result of Decision Tree Model model trained on the raw accelerometer data on our data after preprocessing is as follows**
+
+    Accuracy: 0.24
+    Precision: 0.19
+    Recall: 0.24
+    Confusion Matrix:
+      [[5162    0    0    0    0    0]
+      [5738   13    2    2   77  113]
+      [4705   22    0    0   21   47]
+      [3246  104    3 2270  109  228]
+      [3067  112    1 1602   75  163]
+      [2984  132    2 1847   71  194]]
+    
+    Even after normalization the metrics still remains the same and from the confusion matrix we can observe that the model still does not predict accurately and has very low accuracy with high imbalance.
+
+    After featurising 
+
+    Accuracy: 0.58
+    Precision: 0.59
+    Recall: 0.58
+    Confusion Matrix:
+      [[724 173 121   1   0   1]
+      [170 742 227   6  13  13]
+      [ 80 172 680   6   8  12]
+      [  0  10   9 656 241 269]
+      [  0   8  15 233 477 282]
+      [  0  17  12 279 290 476]]
+
+    After featurising we observe a significant increase in the accuracy and precision. From the confusion matrix, we can observe that the model doesn't accurately predict for any of the classes, however the accuracy has increased as compared to the previous results. 
+
+
+    
+
 ## Decision Tree Implementation
