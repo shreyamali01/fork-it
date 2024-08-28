@@ -36,6 +36,12 @@
 
         ![Plot](Task_1/T1Q3c.png)
 
+    Yes, the scatter plot has become more comprehensive and understandable by using TSFEL library which featurizes the data and gives better results as compared to PCA. The accuracy increased on using the TSFEL library. The PCA plot had more overlapping points making it difficult to analyse the plot unlike the TSFEL plot where it was scattered giving better results.
+
+4. **Question 4**
+
+    Please refer to `Task_1.ipynb`
+
 
 ## Task 2 : Decision Trees for Human Activity Recognition
 
@@ -43,7 +49,7 @@
 
     * **Results for decision tree model trained using the raw accelerometer data:**
 
-      The code for training a decision tree model using the raw accelerometer data - ['sec1.ipynb'](Task_2/sec1.ipynb)
+      The code for training a decision tree model using the raw accelerometer data - `'sec1.ipynb`
     
         - Accuracy: 0.61
         - Precision: 0.60
@@ -99,7 +105,7 @@
 
     * **Results for decision tree model trained using the features obtained by TSFEL:**
 
-      The code for training a decision tree model using the features obtained by TSFEL - ['sec2.ipynb'](Task_2/sec2.ipynb)
+      The code for training a decision tree model using the features obtained by TSFEL - `sec2.ipynb`
     
         - Accuracy: 0.89
         - Precision: 0.90
@@ -119,7 +125,7 @@
     
     * **Results for decision tree model trained using the features provided in the dataset:**
 
-      The code for training a decision tree model using the features provided in the database - ['sec3.ipynb'](Task_2/sec3.ipynb)
+      The code for training a decision tree model using the features provided in the database - `sec3.ipynb`
     
         - Accuracy: 0.84
         - Precision: 0.84
@@ -189,17 +195,18 @@ Decision Tree Model: `Accuracy: 0.83, Precision: 0.75, Recall: 0.83`<br>
 Few Shot Learning: `Accuracy: 0.33, Precision: 0.17, Recall: 0.33`<br>
 The metrics clearly indicate the Decision Tree being better at accurately predicting the output. This is because the Decision Tree model is trained on a much larger dataset, making it capable of higher precision and accuracy, while the Few Shot Learning model had a very limited sample data. This causes the Few Shot Learning method to be much less accurate that its counterpart.
 
-## Question 3
+**Question 3** 
+
 There are many limitations to Zero-Shot Learning and Few-Shot Learning in the context of classifying human activities based on featurized accelerometer data.<br>
 1. Large Query Size: Since the featured dataset contains 561 features, the query often exceeds the query token limit. This limits the number of samples given in Few Shot Learning. Most of the models were unable to process such large queries, even in Zero Shot Learning, where the only data given was for testing.
 2. Poor Generalization: Since human activites are prone to differences, the generalization from such a small dataset is not accurate enough.
 3. Low Training Data: The large size of the features limits the number of data samples for the Few Shot Learning to be trained upon.
 
-## Question 4
+**Question 4**
 We tested the same data samples, but the query was changed to classify the data in WALKING, WALKING_UPSTAIRS and WALKING_DOWNSTAIRS. This means the model does not know that the activites STANDING, SITTING and LAYING could be possible options too. These activities were classified wrongly as one of the activities given to the model.<br>
 This implies that when the model is faced with a data sample that corresponds to an activity not known to the model, it classifies it to the closest match.
 
-## Question 5
+**Question 5**
 We tested random data on the Zero Shot Learning and Few Shot Learning model. The results were the random data being classified in one of the given activities. The reason is same as in the previous question. When the model cannot find any close relation to any of the sample data (in case of Few Shot Learning), it chooses the closest match to be the correct class.
 
 ## Task 4 : Data Collection in the Wild
@@ -248,6 +255,25 @@ We tested random data on the Zero Shot Learning and Few Shot Learning model. The
     On normalizing, the accuracy and precision dropped and the confusion matrix shows more data imbalance. 
 
 
-    
+3. **Question 3**
 
-## Decision Tree Implementation
+    We use the same models as we did in Task 3 to maintain consistency. We used one example of every activity class from the raw accelerometer data to train the model. We query the model on our collected data. We chose this specific data from the UCI-HAR dataset to match the data shape. The collected data was preprocessed by normalizing the data to better match the UCI-HAR dataset.<br>
+    The `llama3.1-8b` model was able to predict only one test sample correctly, while the `llama3.1-70b` model predicted 3 out of 6 correctly. The metrics are as such<br>
+    `llama3.1-8b :`<br>
+    `Accuracy: 0.17, Precision: 0.08, Recall: 0.17`<br>
+    `llama3.1-70b :`<br>
+    `Accuracy: 0.50, Precision: 0.33, Recall: 0.50`<br>
+    We repeated the experiment with 2 examples per activity class for training, and the performance of both the models dropped. The `llama3.1-8b` model predicted all test samples incorrectly, while the `llama3.1-70b` model predicted only one correctly.<br>
+    `llama3.1-8b :`<br>
+    `Accuracy: 0.00, Precision: 0.00, Recall: 0.00`<br>
+    `llama3.1-70b :`<br>
+    `Accuracy: 0.17, Precision: 0.04, Recall: 0.17`<br>
+
+4. **Question 4**
+
+    We use the same models as we did in Task 3 to maintain consistency. We used one example of every activity class from our collected data to train the model. We query the model on our collected data. The data collected from Manav was used to train the model, while the data collected from Arul was used to test it. This was done to ensure there is no data leaking.<br>
+    The `llama3.1-8b` model had the same performace as with the model trained on the UCI-HAR dataset, but the `llama3.1-70b` model's performace significantly improved as such<br>
+    `llama3.1-8b :`<br>
+    `Accuracy: 0.50, Precision: 0.31, Recall: 0.50`<br>
+    `llama3.1-70b :`<br>
+    `Accuracy: 0.83, Precision: 0.75, Recall: 0.83`<br>
