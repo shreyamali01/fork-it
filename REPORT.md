@@ -168,10 +168,6 @@
     Upon analyzing the confusion matrices for model 1, model 2 and model 3, we notice that all the models fit perfectly for class 1, and model 3 fits perfectly for class 1, class 5 and class 6. Furthermore, it can be also observed that Model 1 has the most
     misclassifications followed by model 3 and model 2 respectively. The reason for this miscalculations is class imbalance. We tried to resolve the class imbalance by trying to oversample the minority classes and undersample the majority classes, however it did not make much difference to the accuracy values, precision values and confusion matrices. 
 
-    We can also determine the best and worst performing activities/classes by F1 score measure. 
-
-
-
 ## Task 3 : Prompt Engineering for Large Language Models (LLMs)
 
 We are using `llama3.1-8b` and `llama3.1-70b` models to do this task. Since the query is too large, it exceeded the token limit for most of the models. These two models are used to provide a better generalized result
