@@ -169,7 +169,7 @@
 ## Task 3 : Prompt Engineering for Large Language Models (LLMs)
 
 We are using `llama3.1-8b` and `llama3.1-70b` models to do this task. Since the query is too large, it exceeded the token limit for most of the models. These two models are used to provide a better generalized result
-## Question 1
+### Question 1
 We have used the 561-featured dataset to test and train the LLMs. After creating a csv file of the dataset along with the labels, we tested one example of every activity.<br>
 
 Zero Shot Learning is the ability of a model to make predictions on data which was never seen by the model as part of the training, and is based on the existing data in the LLM model.<br>
@@ -183,7 +183,7 @@ Based on the concept, Few Shot Learning usually performs better than Zero Shot L
 Few Shot Learning was implemented by giving two random example data of each activity considering the query token limit.<br>
 `llama3.1-8b` was unable to generate any predictions, but `llama3.1-70b` model showed improvement. It was able to correctly predict two out of the six test samples given, making the accuracy of Few Shot Learning 33.33%.
 
-## Question 2
+### Question 2
 The whole featured dataset containing 561 features and more than 7000 datapoints was used to train the Decision Tree, while 2 data samples of every class was used in Few Shot Learning. The metrics were observed as follows:<br>
 Decision Tree Model: `Accuracy: 0.83, Precision: 0.75, Recall: 0.83`<br>
 Few Shot Learning: `Accuracy: 0.33, Precision: 0.17, Recall: 0.33`<br>
@@ -219,35 +219,33 @@ We tested random data on the Zero Shot Learning and Few Shot Learning model. The
     
     Here we observe that the accuracy is very low and from the confusion matrix we can observe that the data shows high imbalance. The model works well for the class 1 whereas it isn't able to predict other activities efficiently. To improve on the accuracy we can try to preprocess the data.
 
-2. **Result of Decision Tree Model model trained on the raw accelerometer data on our data after preprocessing is as follows**
+2. **Result of Decision Tree Model model trained on our data is as follows**
 
-    Accuracy: 0.24
-    Precision: 0.19
-    Recall: 0.24
+    Accuracy: 0.51
+    Precision: 0.40
+    Recall: 0.51
     Confusion Matrix:
-      [[5162    0    0    0    0    0]
-      [5738   13    2    2   77  113]
-      [4705   22    0    0   21   47]
-      [3246  104    3 2270  109  228]
-      [3067  112    1 1602   75  163]
-      [2984  132    2 1847   71  194]]
+      [[ 703  209  106    2    0    0]
+      [  92  808  186   85    0    0]
+      [  72  233  603   50    0    0]
+      [   0   21   26 1138    0    0]
+      [   0   10   29  976    0    0]
+      [   0   22   37 1015    0    0]]
     
-    Even after normalization the metrics still remains the same and from the confusion matrix we can observe that the model still does not predict accurately and has very low accuracy with high imbalance.
+    Let's normalize the data now, 
 
-    After featurising 
-
-    Accuracy: 0.58
-    Precision: 0.59
-    Recall: 0.58
+    Accuracy: 0.17
+    Precision: 0.03
+    Recall: 0.17
     Confusion Matrix:
-      [[724 173 121   1   0   1]
-      [170 742 227   6  13  13]
-      [ 80 172 680   6   8  12]
-      [  0  10   9 656 241 269]
-      [  0   8  15 233 477 282]
-      [  0  17  12 279 290 476]]
+      [[   0    0    0 1020    0    0]
+      [   0    0    0 1171    0    0]
+      [   0    0    0  958    0    0]
+      [   3   62   51 1069    0    0]
+      [   8   92   48  867    0    0]
+      [   6   61   58  949    0    0]]
 
-    After featurising we observe a significant increase in the accuracy and precision. From the confusion matrix, we can observe that the model doesn't accurately predict for any of the classes, however the accuracy has increased as compared to the previous results. 
+    On normalizing, the accuracy and precision dropped and the confusion matrix shows more data imbalance. 
 
 
     

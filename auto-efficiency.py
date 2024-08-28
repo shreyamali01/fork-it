@@ -8,10 +8,11 @@ from sklearn.tree import DecisionTreeRegressor
 np.random.seed(42)
 
 # Reading the data
-url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data'
-data = pd.read_csv(url, delim_whitespace=True, header=None,
-                 names=["mpg", "cylinders", "displacement", "horsepower", "weight",
-                        "acceleration", "model year", "origin", "car name"])
+url = '/Users/shreya/Documents/fork-it/auto-mpg.data'
+data = pd.read_csv(url, sep=r'\s+', header=None,
+                   names=["mpg", "cylinders", "displacement", "horsepower", "weight",
+                          "acceleration", "model year", "origin", "car name"])
+
 
 # Clean the above data by removing redundant columns and rows with junk values
 # Compare the performance of your model with the decision tree module from scikit learn
@@ -19,7 +20,7 @@ data = pd.read_csv(url, delim_whitespace=True, header=None,
 data = data.drop('car name',axis=1) #irrelevant data to us
 
 data['horsepower'] = pd.to_numeric(data['horsepower'], errors='coerce')
-data['horsepower'].fillna(data['horsepower'].mean(), inplace=True)
+data['horsepower']=data['horsepower'].fillna(data['horsepower'].mean(), inplace=True)
 
 data = pd.get_dummies(data, columns=['origin'], drop_first=True)
 
