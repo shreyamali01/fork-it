@@ -42,4 +42,50 @@ for criteria in criterion:
     print(f'Precision: {precision_val}')
     print(f'Recall: {recall_val}')
 
+#Using nested cross-validation to find the optimal depth
 
+criterion = ['information_gain','gini_index']
+depths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+X = pd.DataFrame(X)
+y = pd.Series(y)
+K = 5
+m = 4
+ind_Xy = int(len(X)/K)
+hyper_paramaters = []
+for i in range(K):
+    X_test = pd.DataFrame(X[i*ind_Xy : (i+1)*ind_Xy]).reset_index(drop=True)
+    y_test = pd.Series(y[i*ind_Xy : (i+1)*ind_Xy]).reset_index(drop=True)
+    X_outerTrain = pd.concat( (X[0:i*ind_Xy], X[(i+1)*ind_Xy:]), axis=0 ).reset_index(drop=True)
+    y_outerTrain = pd.concat( (y[0:i*ind_Xy], y[(i+1)*ind_Xy:]), axis=0 ).reset_index(drop=True)
+    fin_accuracy = None
+    fin_depth = None
+    best_criteria = None
+    for criteria in criterion:
+        for depth in depths:
+            accuracy_sum = 0
+            for j in range(m):
+                X_validation = pd.DataFrame(X_outerTrain[j*ind_Xy:(j+1)*ind_Xy]).reset_index(drop=True)
+                y_validation = pd.Series(y_outerTrain[j*ind_Xy:(j+1)*ind_Xy]).reset_index(drop=True)
+                X_innerTrain = pd.concat( (X_outerTrain[0:j*ind_Xy], X_outerTrain[(j+1)*ind_Xy:]), axis=0 ).reset_index(drop=True)
+                y_innerTrain = pd.concat( (y_outerTrain[0:j*ind_Xy], y_outerTrain[(j+1)*ind_Xy:]), axis=0 ).reset_index(drop=True)
+                model = DecisionTree(criterion = criteria, max_depth = depth)
+                model.fit(X_innerTrain, y_innerTrain)
+                y_pred = model.predict(X_validation)
+                accuracy_sum += accuracy(y_pred, y_validation)
+            avg_accuracy = accuracy_sum / m
+            if ((fin_accuracy is None) or (avg_accuracy > fin_accuracy)):
+                fin_accuracy = avg_accuracy
+                fin_depth = depth
+                best_criteria = criteria
+    fin_model = DecisionTree(criterion = best_criteria, max_depth = fin_depth)
+    fin_model.fit(X_outerTrain, y_outerTrain)
+    y_pred = fin_model.predict(X_test)
+    hyper_paramaters.append((fin_depth, best_criteria, accuracy(y_pred, y_test)))
+
+
+total_accuracy = 0
+for i in range(K):
+    total_accuracy += hyper_paramaters[i][2]
+avg_accuracy_kfolds = float(total_accuracy)/5
+print(hyper_paramaters)
+print(avg_accuracy_kfolds)
